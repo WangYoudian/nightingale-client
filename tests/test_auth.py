@@ -8,11 +8,14 @@ cli = FalconClient(endpoint="http://116.85.67.78:80/", user='root', password='ro
 # print(cli)
 
 # /api/portal/self/profile
-auth = {}
-print(cli.api.portal.ping.get())
-print()
-print(cli.api.portal.pid.get())
-print(cli.api.portal.version.get())
+# auth = {}
+print(cli.api.portal.self.profile.get())  # {'err': 'unauthorized'}
+print(cli.api.portal.ping.get())  # Get unknow error from falcon:pong
+print(cli.api.portal.pid.get())  # 3288
+print(cli.api.portal.version.get())  # 1
+
+print(cli.api.portal.collect.get())  # {'err': 'unauthorized'}
+
 
 # PUT
 # /api/portal/stra
@@ -53,4 +56,6 @@ data = {
 }
 # openfalconclient.exceptions.InternalServerError: Get unknow error from falcon: (HTTP 500) (HTTP 500)
 # 没有这个id
-# print(cli.api.portal.stra.put(data=data))
+# print(cli.api.portal.stra.put(data=data))  # Internal Server Error (HTTP 500)
+
+print(cli.api.portal.stra.get())

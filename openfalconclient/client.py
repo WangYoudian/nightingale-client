@@ -34,7 +34,7 @@ class FalconClient(object):
                 "name": user,
                 "sig": ret.get("sig")
             }
-            # self._session.auth = ('root', 'root')
+            self._session.auth = ('root', 'root')
             self._session.headers.update({
                 'Content-Type': 'application/json; charset=utf-8',
                 'Accept': 'application/json',
@@ -63,12 +63,11 @@ class FalconClient(object):
     def do_request(self, method, url, params=None, data=None):
         url = self._endpoint + self._url_prex + url
         print(url)
+        if data:
+            print(data)
 
         if params is None:
-            params = {
-                'name': 'root',
-                'password': 'root'
-            }
+            params = {}
 
         if method == 'get' or method == 'list':
             response = self._session.get(url, params=params, verify=self.ssl_verify)
@@ -85,7 +84,7 @@ class FalconClient(object):
         try:
             body = json.loads(response.text)
         except ValueError:
-            body = "Get unknow error from falcon:%s" % response.text
+            body = "Get unknow error from falcon:%s" % response.reason
         if response.status_code >= 400:
             message = body
             raise exceptions.from_response(response.status_code, self.url, method, message)
