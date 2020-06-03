@@ -9,7 +9,7 @@ from openfalconclient import exceptions
 
 
 class FalconClient(object):
-    _endpoint = "http://127.0.0.1:8080"
+    _endpoint = "http://127.0.0.1:8080/"
     _url_prex = ''
     _session = None
     _keys = []
@@ -92,3 +92,37 @@ class FalconClient(object):
 
         return body
 
+
+class DummyClient(object):
+    _endpoint = "http://127.0.0.1:8080/"
+    _url_prex = ''
+    _session = None
+    _keys = []
+
+    def __init__(self, endpoint=None, user=None, password=None, keys=[], session=None, ssl_verify=True):
+
+        self._keys = keys
+        self._session = session
+        self.ssl_verify = ssl_verify
+
+        if endpoint:
+            self._endpoint = endpoint
+
+    def __getattr__(self, key):
+        if key in self.__dict__:
+            return self.__dict__[key]
+
+        return self.__class__(
+            endpoint=self._endpoint,
+            keys=self._keys + [key],
+            session=self._session,
+            ssl_verify=self.ssl_verify)
+
+    def __getitem__(self, key):
+        return self.__getattr__(key)
+
+    def __call__(self, **kwargs):
+        method = self._keys[-1]
+        url = "/".join(self._keys[0:-1])
+        url = url.strip("/")
+        return self._endpoint + self._url_prex + url, method
