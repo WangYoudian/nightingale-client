@@ -52,6 +52,7 @@ class FalconClient(object):
             ssl_verify=self.ssl_verify)
 
     def __getitem__(self, key):
+        """Look up an option value and perform string substitution."""
         return self.__getattr__(key)
 
     def __call__(self, **kwargs):

@@ -141,3 +141,4 @@ data = {
   ]
 }
 print(cli.api.transfer.data.post(data=data))
+print(float(1)==int(1))
